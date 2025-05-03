@@ -1,33 +1,21 @@
 "use client"
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import { ShoppingCart } from "lucide-react"
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet"
-import { Button } from "@/components/ui/button"
-import { CartItem, useCart } from "@/lib/cart"
-import { toast } from "sonner"
-import Image from "next/image"
-import { Product } from "@/types/types"
+import { CartItem } from "@/lib/cart"
 import ImageGallery from "./ImageGallery"
 import ProductInfo from "./ProductInfo"
 import PriceDisplay from "./PriceDisplay"
 import AddToCartForm from "./AddToCartForm"
+import { ProductWithCategoryAndSeller } from "@/types/types"
 
-export default function ProductDetails({ product }: { product: Product }) {
+export default function ProductDetails({ product }: { product: ProductWithCategoryAndSeller }) {
 
   const cartItem: CartItem = {
     id: product.id,
     image: product.images[0],
     price: product.price,
     quantity: 1,
-    title: product.title
+    title: product.title,
+    sellerId: product.sellerId
   }
 
   return (

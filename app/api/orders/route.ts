@@ -2,6 +2,8 @@ import { NextResponse } from "next/server"
 import { getServerSession } from "next-auth"
 import { prisma } from "@/lib/prisma"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { Cart } from "@/lib/cart"
+import { log } from 'console'
 
 export async function POST(req: Request) {
   try {
@@ -11,50 +13,74 @@ export async function POST(req: Request) {
       return new NextResponse("Unauthorized", { status: 401 })
     }
 
-    const body = await req.json()
-    const { items } = body
+    log(session)
 
-    if (!items?.length) {
+    const body = await req.json()
+    const items = body as { items: Cart }
+
+    log(body)
+    log(items)
+
+    if (!items?.cartItems.length) {
       return new NextResponse("No items in order", { status: 400 })
     }
 
-    const total = items.reduce(
-      (acc: number, item: { price: number; quantity: number }) =>
-        acc + item.price * item.quantity,
-      0
-    )
 
-    const order = await prisma.order.create({
-      data: {
-        userId: session.user.id,
-        total,
-        orderItems: {
-          create: items.map((item: any) => ({
-            productId: item.productId,
-            quantity: item.quantity,
-            price: item.price,
-          })),
-        },
-        notification: {
-          create: {
-            userId: session.user.id,
-            type: "ORDER_CREATED",
-            message: `Your order has been placed successfully. Total: ₹${total.toFixed(
-              2
-            )}`,
+    // separate orders by seller
+    const grouped = new Map<string, typeof items.cartItems>()
+
+    for (const item of items.cartItems) {
+      if (!grouped.has(item.sellerId)) grouped.set(item.sellerId, [])
+      grouped.get(item.sellerId)!.push(item)
+    }
+
+    const createdOrders = []
+
+    for (const [sellerId, sellerItems] of grouped.entries()) {
+      const total = sellerItems.reduce(
+        (acc, item) => acc + item.price * item.quantity,
+        0
+      )
+
+      const order = await prisma.order.create({
+        data: {
+          userId: session.user.id,
+          total,
+          address: items.address,
+          phone: items.phone ?? "",
+          orderItems: {
+            create: sellerItems.map((item) => ({
+              productId: item.id,
+              quantity: item.quantity,
+              price: item.price,
+            })),
+          },
+          sellerOrder: {
+            create: {
+              sellerUserId: sellerId,
+            },
+          },
+          notification: {
+            create: {
+              userId: session.user.id,
+              type: "ORDER_CREATED",
+              message: `Order placed with seller ${sellerId}. Total: ₹${total.toFixed(2)}`,
+            },
           },
         },
-      },
-      include: {
-        orderItems: {
-          include: {
-            product: true,
+        include: {
+          orderItems: {
+            include: {
+              product: true,
+            },
           },
         },
-      },
-    })
+      })
 
-    return NextResponse.json(order)
+      createdOrders.push(order)
+    }
+
+    return NextResponse.json(createdOrders)
   } catch (error) {
     console.log("[ORDERS_POST]", error)
     return new NextResponse("Internal error", { status: 500 })

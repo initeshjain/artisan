@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma"
 import ProductGrid from "@/components/product-grid"
 import { ProductSearch } from "@/components/product-search"
+import { ProductWithCategoryAndSeller } from "@/types/types"
 
 export default async function ProductsPage({
   searchParams,
@@ -9,7 +10,7 @@ export default async function ProductsPage({
 }) {
   const { q, category } = searchParams
 
-  const products = await prisma.product.findMany({
+  const products: ProductWithCategoryAndSeller[] = await prisma.product.findMany({
     where: {
       AND: [
         q
@@ -25,14 +26,10 @@ export default async function ProductsPage({
     },
     include: {
       category: true,
-      user: {
-        select: {
-          name: true,
-        },
-      },
+      seller: true,
     },
     orderBy: {
-      createdAt: "desc",
+      createdAt: 'desc',
     },
   })
 

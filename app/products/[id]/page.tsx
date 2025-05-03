@@ -13,13 +13,7 @@ export default async function ProductPage({
     },
     include: {
       category: true,
-      user: {
-        select: {
-          id: true,
-          name: true,
-          image: true,
-        },
-      },
+      seller: true,
     },
   })
 

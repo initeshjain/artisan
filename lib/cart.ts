@@ -7,6 +7,14 @@ export type CartItem = {
   price: number
   image: string
   quantity: number
+  sellerId: string
+}
+
+export type Cart = {
+  cartItems: CartItem[]
+  subTotal: number
+  address: string
+  phone: string | undefined
 }
 
 type CartStore = {

@@ -12,15 +12,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { Category, Product } from "@/types/types"
 import { formatPrice } from "@/lib/price"
+import { Category } from "@prisma/client"
+import { ProductWithCategoryAndSeller } from "@/types/types"
 
-export default function ProductGrid({ products, categories }: { products: Product[], categories: Category[] }) {
+export default function ProductGrid({ products, categories }: { products: ProductWithCategoryAndSeller[], categories: Category[] }) {
   const [selectedCategory, setSelectedCategory] = useState("")
   console.log(categories)
-  const filteredProducts = selectedCategory
-    ? products.filter((product) => product.category.id === selectedCategory)
-    : products
+  const filteredProducts = selectedCategory && selectedCategory != "All"
+    ? products.filter((product) => product.categoryId === selectedCategory)
+    : products;
 
   return (
     <div>
@@ -29,19 +30,19 @@ export default function ProductGrid({ products, categories }: { products: Produc
           <SelectTrigger className="w-[200px]">
             <SelectValue placeholder="All Categories" />
           </SelectTrigger>
-          {/* <SelectContent>
-            <SelectItem value="">All Categories</SelectItem>
+          <SelectContent>
+            <SelectItem value="All">All Categories</SelectItem>
             {categories.length != 0 && categories.map((category) => (
               <SelectItem key={category.id} value={category.id}>
                 {category.name}
               </SelectItem>
             ))}
-          </SelectContent> */}
+          </SelectContent>
         </Select>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredProducts.map((product: Product) => (
+        {filteredProducts.map((product: ProductWithCategoryAndSeller) => (
           <Link href={`/products/${product.id}`} key={product.id}>
             <Card className="overflow-hidden hover:shadow-lg transition-shadow">
               <CardContent className="p-0">
@@ -59,7 +60,7 @@ export default function ProductGrid({ products, categories }: { products: Produc
                 <div className="flex items-center justify-between w-full">
                   <p className="text-primary">{formatPrice(product.price)}</p>
                   <p className="text-sm text-muted-foreground">
-                    by {product.user.name}
+                    by {product.seller.name}
                   </p>
                 </div>
               </CardFooter>

@@ -86,11 +86,11 @@ model Product {
   price       Float
   images      String[]
   categoryId  String      @db.ObjectId
-  userId      String      @db.ObjectId
+  sellerId    String      @db.ObjectId
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
   category    Category    @relation(fields: [categoryId], references: [id])
-  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  seller      User        @relation(fields: [sellerId], references: [id], onDelete: Cascade)
   orderItems  OrderItem[]
   keywords    String[]
 }
@@ -106,16 +106,29 @@ model Order {
   orderItems   OrderItem[]
   notification Notification?
   address      String
+  phone        String
+  sellerOrder  SellerOrder?  @relation("OrderToSellerOrder") // no fields or references
 }
 
 model OrderItem {
-  id        String  @id @default(auto()) @map("_id") @db.ObjectId
-  orderId   String  @db.ObjectId
-  productId String  @db.ObjectId
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  orderId   String   @db.ObjectId
+  productId String   @db.ObjectId
   quantity  Int
   price     Float
-  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  product   Product @relation(fields: [productId], references: [id])
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SellerOrder {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  sellerUserId String   @db.ObjectId
+  orderId      String   @unique @db.ObjectId
+  order        Order    @relation("OrderToSellerOrder", fields: [orderId], references: [id])
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }
 
 model Notification {

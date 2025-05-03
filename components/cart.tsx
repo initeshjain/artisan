@@ -11,9 +11,22 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet"
 import { Button } from "@/components/ui/button"
-import { useCart } from "@/lib/cart"
+import { Cart as CartType, useCart } from "@/lib/cart"
 import { toast } from "sonner"
 import { formatPrice } from "@/lib/price"
+
+type UserAddress = {
+  address: {
+    street: string;
+    city: string;
+    state: string;
+    country: string;
+    postalCode: string;
+    phone: string;
+    id: string;
+    userId: string;
+  }
+}
 
 export default function Cart() {
   const router = useRouter()
@@ -23,19 +36,25 @@ export default function Cart() {
 
   async function onCheckout() {
     try {
+
+      const profileres = await fetch("/api/profile")
+      const user: UserAddress = await profileres.json()
+      
       setIsLoading(true)
+
+      const cart: CartType = {
+        cartItems: items,
+        subTotal: total(),
+        address: `${user?.address?.street}, ${user?.address?.city}, ${user?.address?.state}, ${user?.address?.country}, ${user?.address?.postalCode}`,
+        phone: user?.address?.phone
+      }
+
       const response = await fetch("/api/orders", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          items: items.map((item) => ({
-            productId: item.id,
-            quantity: item.quantity,
-            price: item.price,
-          })),
-        }),
+        body: JSON.stringify(cart),
       })
 
       if (!response.ok) {

@@ -72,9 +72,6 @@ export default function Navbar() {
               <Link href="/login">
                 <Button variant="ghost">Login</Button>
               </Link>
-              <Link href="/register">
-                <Button>Sign Up</Button>
-              </Link>
             </>
           )}
           <Cart />
