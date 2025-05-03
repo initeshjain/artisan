@@ -4,8 +4,21 @@ import { format } from "date-fns"
 import { Bell } from "lucide-react"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Button } from "@/components/ui/button"
+import { useEffect, useState } from "react"
+import { Notification } from "@prisma/client"
 
-export default function NotificationList({ notifications }) {
+export default function NotificationList() {
+
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      const res = await fetch("/api/notifications")
+      const notifications = await res.json()
+      setNotifications(notifications)
+    })()
+  }, [])
+
   async function markAsRead(id: string) {
     try {
       await fetch(`/api/notifications/${id}`, {
@@ -20,6 +33,8 @@ export default function NotificationList({ notifications }) {
     }
   }
 
+
+
   return (
     <ScrollArea className="h-[400px] rounded-md border p-4">
       {notifications.length === 0 ? (
@@ -32,9 +47,8 @@ export default function NotificationList({ notifications }) {
           {notifications.map((notification) => (
             <div
               key={notification.id}
-              className={`p-4 rounded-lg border ${
-                notification.read ? "bg-muted" : "bg-primary/5"
-              }`}
+              className={`p-4 rounded-lg border ${notification.read ? "bg-muted" : "bg-primary/5"
+                }`}
             >
               <div className="flex items-start justify-between gap-4">
                 <div>

@@ -11,10 +11,10 @@ import {
 } from "@/components/ui/table"
 import { formatPrice } from "@/lib/price"
 import { useEffect, useState } from "react"
-import { Prisma } from "@prisma/client"
+import { OrderStatus, Prisma } from "@prisma/client"
 import { useRouter } from "next/navigation"
 import { useSession } from "next-auth/react"
-import { Button } from "./ui/button"
+import { Button } from "@/components/ui/button"
 import React from "react"
 import Link from "next/link"
 import { toast } from "sonner"
@@ -77,16 +77,28 @@ export default function OrderList() {
   }
 
   const handleAccept = (orderId: string) => {
-    updateOrderStatus(orderId, "ACCEPTED")
+    updateOrderStatus(orderId, OrderStatus.ACCEPTED)
   }
 
   const handleReject = (orderId: string) => {
-    updateOrderStatus(orderId, "REJECTED")
+    updateOrderStatus(orderId, OrderStatus.REJECTED)
+  }
+
+  const handleInProgress = (orderId: string) => {
+    updateOrderStatus(orderId, OrderStatus.INPROGRESS)
+  }
+
+  const handleComplete = (orderId: string) => {
+    updateOrderStatus(orderId, OrderStatus.COMPLETED)
+  }
+
+  const handleCancel = (orderId: string) => {
+    updateOrderStatus(orderId, OrderStatus.CANCELED)
   }
 
   const refetchOrders = async () => {
     try {
-      const res = await fetch("/api/orders")
+      const res = await fetch("/api/seller/orders")
       const orders = await res.json()
       setOrders(orders) // Update the orders in the state
     } catch (error) {
@@ -106,6 +118,7 @@ export default function OrderList() {
           <TableHead>Order Date</TableHead>
           <TableHead>Status</TableHead>
           <TableHead>Total</TableHead>
+          <TableHead>Customer</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -116,6 +129,30 @@ export default function OrderList() {
               <TableCell>{format(new Date(order.createdAt), "PPP")}</TableCell>
               <TableCell>{order.order.status}</TableCell>
               <TableCell>{formatPrice(order.order.total)}</TableCell>
+              <TableCell>{`${order.order.address} ${order.order.phone}`}</TableCell>
+              {order.order.status === OrderStatus.PENDING && (
+                <React.Fragment>
+                  <TableCell>
+                    <Button onClick={() => handleAccept(order.order.id)}>Accept</Button>
+                  </TableCell>
+                  <TableCell>
+                    <Button variant="destructive" onClick={() => handleReject(order.order.id)}>Reject</Button>
+                  </TableCell>
+                </React.Fragment>
+              )}
+
+              <TableCell>
+                <Button title="mark in progress" variant="outline" onClick={() => handleInProgress(order.order.id)}>🚚</Button>
+              </TableCell>
+
+              <TableCell>
+                <Button title="mark complete" variant="outline" onClick={() => handleComplete(order.order.id)}>✔</Button>
+              </TableCell>
+
+              <TableCell>
+                <Button title="mark cancel" variant="outline" onClick={() => handleCancel(order.order.id)}>❌</Button>
+              </TableCell>
+
               <TableCell>
                 <Button variant="outline" onClick={() => toggleOrderItems(order.id)}>
                   {expandedOrderId === order.id ? "Hide Items" : "Show Items"}
@@ -139,7 +176,7 @@ export default function OrderList() {
                         {order.order.orderItems.map((orderItem) => (
                           <TableRow>
                             <TableCell><img src={orderItem.product.images && orderItem.product.images[0]} alt={orderItem.product.title} width={50} height={50} /></TableCell>
-                            <TableCell className="underline"><Link href={`/products/${orderItem.product.id}`}>{orderItem.product.title}</Link></TableCell>
+                            <TableCell><Link href={`/products/${orderItem.product.id}`}>{orderItem.product.title}</Link></TableCell>
                             <TableCell>₹{orderItem.product.price}</TableCell>
                             <TableCell>{orderItem.quantity}</TableCell>
                           </TableRow>
@@ -153,6 +190,6 @@ export default function OrderList() {
           </React.Fragment>
         ))}
       </TableBody>
-    </Table>
+    </Table >
   )
 }

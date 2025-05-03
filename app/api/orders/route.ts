@@ -16,7 +16,7 @@ export async function POST(req: Request) {
     log(session)
 
     const body = await req.json()
-    const items = body as { items: Cart }
+    const items = body as Cart
 
     log(body)
     log(items)
@@ -24,7 +24,6 @@ export async function POST(req: Request) {
     if (!items?.cartItems.length) {
       return new NextResponse("No items in order", { status: 400 })
     }
-
 
     // separate orders by seller
     const grouped = new Map<string, typeof items.cartItems>()

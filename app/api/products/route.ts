@@ -1,43 +1,5 @@
 import { NextResponse } from "next/server"
-import { getServerSession } from "next-auth"
 import { prisma } from "@/lib/prisma"
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
-
-export async function POST(req: Request) {
-  try {
-    const session = await getServerSession(authOptions)
-
-    console.log("session: ", session)
-
-    if (!session?.user?.email) {
-      return new NextResponse("Unauthorized", { status: 401 })
-    }
-
-    const body = await req.json()
-    const { title, description, price, categoryId, images, keywords } = body
-
-    if (!title || !description || !price || !categoryId || !images?.length) {
-      return new NextResponse("Missing required fields", { status: 400 })
-    }
-
-    const product = await prisma.product.create({
-      data: {
-        title,
-        description,
-        price,
-        images,
-        keywords: keywords || [],
-        categoryId,
-        userId: session.user.id,
-      },
-    })
-
-    return NextResponse.json(product)
-  } catch (error) {
-    console.log("[PRODUCTS_POST]", error)
-    return new NextResponse("Internal error", { status: 500 })
-  }
-}
 
 export async function GET(req: Request) {
   try {
@@ -48,20 +10,21 @@ export async function GET(req: Request) {
     const products = await prisma.product.findMany({
       where: {
         AND: [
+          { isActive: true }, // ✅ Only active products
           query
             ? {
-                OR: [
-                  { title: { contains: query, mode: "insensitive" } },
-                  { keywords: { has: query } },
-                ],
-              }
+              OR: [
+                { title: { contains: query, mode: "insensitive" } },
+                { keywords: { has: query } },
+              ],
+            }
             : {},
           categoryId ? { categoryId } : {},
         ],
       },
       include: {
         category: true,
-        user: {
+        seller: {
           select: {
             name: true,
           },

@@ -3,11 +3,10 @@
 import { useState } from "react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Card } from "@/components/ui/card"
-import OrderList from "@/components/order-list"
-import { User } from "@/types/types"
+import OrderList from "@/components/seller/order-list"
 import MyProductsPage from "./MyProductsPage"
 
-export default function SellerTabs({ user }: { user: User }) {
+export default function SellerTabs() {
   const [activeTab, setActiveTab] = useState("orders")
 
   return (
@@ -27,7 +26,7 @@ export default function SellerTabs({ user }: { user: User }) {
       <TabsContent value="orders">
         <Card className="p-6">
           <h2 className="text-2xl font-semibold mb-6">Orders</h2>
-          <OrderList orders={user.orders} />
+          <OrderList />
         </Card>
       </TabsContent>
 

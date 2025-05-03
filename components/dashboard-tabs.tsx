@@ -6,7 +6,7 @@ import { Card } from "@/components/ui/card"
 import OrderList from "@/components/order-list"
 import NotificationList from "@/components/notification-list"
 import ProfileForm from "@/components/profile-form"
-import { User } from "@/types/types"
+import { User } from "@prisma/client"
 
 export default function DashboardTabs({ user }: { user: User }) {
   const [activeTab, setActiveTab] = useState("profile")
@@ -18,13 +18,6 @@ export default function DashboardTabs({ user }: { user: User }) {
         <TabsTrigger value="orders">Orders</TabsTrigger>
         <TabsTrigger value="notifications">Notifications</TabsTrigger>
       </TabsList>
-
-      {/* <TabsContent value="products">
-        <Card className="p-6">
-          <h2 className="text-2xl font-semibold mb-6">My Products</h2>
-          <ProductForm user={user} />
-        </Card>
-      </TabsContent> */}
 
       <TabsContent value="profile">
         <Card className="p-6">
@@ -43,7 +36,7 @@ export default function DashboardTabs({ user }: { user: User }) {
       <TabsContent value="notifications">
         <Card className="p-6">
           <h2 className="text-2xl font-semibold mb-6">Notifications</h2>
-          <NotificationList notifications={user.notifications} />
+          <NotificationList />
         </Card>
       </TabsContent>
     </Tabs>

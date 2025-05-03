@@ -13,10 +13,10 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { toast } from "sonner"
-import { User, Category } from "@/types/types"
 import axios from "axios"
+import { Category } from "@prisma/client"
 
-export default function ProductForm({ user }: { user?: User }) {
+export default function ProductForm() {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
   const [images, setImages] = useState<string[]>([])
@@ -44,7 +44,7 @@ export default function ProductForm({ user }: { user?: User }) {
         keywords: formData.get("keywords")?.toString().split(",").map(k => k.trim()),
       }
 
-      const res = await fetch("/api/products", {
+      const res = await fetch("/api/seller/products", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

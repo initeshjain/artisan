@@ -18,7 +18,7 @@ export default async function DashboardPage() {
   }
 
   return (
-    <div className="container p-8">
+    <div className="container p-8 min-h-screen">
       <h1 className="text-3xl font-bold mb-8">My Profile</h1>
       <DashboardTabs user={user} />
     </div>
