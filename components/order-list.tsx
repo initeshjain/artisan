@@ -17,7 +17,8 @@ import { useSession } from "next-auth/react"
 import { Button } from "./ui/button"
 import React from "react"
 import Link from "next/link"
-import { toast } from "sonner"
+import { ScrollArea } from "./ui/scroll-area"
+import { Package } from "lucide-react"
 
 type SellerOrderWithRelations = Prisma.SellerOrderGetPayload<{
   include: {
@@ -48,111 +49,80 @@ export default function OrderList() {
 
     // Fetch orders if logged in
     (async () => {
-      const res = await fetch("/api/seller/orders")
+      const res = await fetch("/api/orders")
       const orders = await res.json()
       setOrders(orders)
     })()
-  }, [router])
-
-  const updateOrderStatus = async (orderId: string, status: string) => {
-    try {
-      const res = await fetch(`/api/seller/orders`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ orderId, status }),
-      })
-
-      if (res.ok) {
-        // Refetch orders after successful status update
-        toast.success("Order updated")
-        await refetchOrders()
-      } else {
-        toast.error("Failed to update order status")
-      }
-    } catch (error) {
-      toast.error("Error updating order status: " + error)
-    }
-  }
-
-  const handleAccept = (orderId: string) => {
-    updateOrderStatus(orderId, "ACCEPTED")
-  }
-
-  const handleReject = (orderId: string) => {
-    updateOrderStatus(orderId, "REJECTED")
-  }
-
-  const refetchOrders = async () => {
-    try {
-      const res = await fetch("/api/orders")
-      const orders = await res.json()
-      setOrders(orders) // Update the orders in the state
-    } catch (error) {
-      toast.error("Error refetching orders: " + error)
-    }
-  }
+  }, [])
 
   const toggleOrderItems = (orderId: string) => {
     setExpandedOrderId((prev) => (prev === orderId ? null : orderId)) // Toggle visibility of order items for this order
   }
 
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Order ID</TableHead>
-          <TableHead>Order Date</TableHead>
-          <TableHead>Status</TableHead>
-          <TableHead>Total</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {orders.map((order) => (
-          <React.Fragment key={order.id}>
+    <ScrollArea className="h-[400px] rounded-md border p-4">
+      {orders.length === 0 ? (
+        <div className="flex flex-col items-center justify-center h-full text-muted-foreground">
+          <Package className="h-8 w-8 mb-2" />
+          <p>No orders yet</p>
+        </div>
+      ) : (
+        <Table>
+          <TableHeader>
             <TableRow>
-              <TableCell className="font-medium">{order.id}</TableCell>
-              <TableCell>{format(new Date(order.createdAt), "PPP")}</TableCell>
-              <TableCell>{order.order.status}</TableCell>
-              <TableCell>{formatPrice(order.order.total)}</TableCell>
-              <TableCell>
-                <Button variant="outline" onClick={() => toggleOrderItems(order.id)}>
-                  {expandedOrderId === order.id ? "Hide Items" : "Show Items"}
-                </Button>
-              </TableCell>
+              <TableHead>Order ID</TableHead>
+              <TableHead>Order Date</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Total</TableHead>
             </TableRow>
-            {expandedOrderId === order.id && (
-              <TableRow>
-                <TableCell colSpan={6}>
-                  <div className="ml-4 mt-2">
-                    <Table>
-                      <TableHeader>
-                        <TableRow>
-                          <TableHead>#</TableHead>
-                          <TableHead>Name</TableHead>
-                          <TableHead>Price</TableHead>
-                          <TableHead>Quantity</TableHead>
-                        </TableRow>
-                      </TableHeader>
-                      <TableBody>
-                        {order.order.orderItems.map((orderItem) => (
-                          <TableRow>
-                            <TableCell><img src={orderItem.product.images && orderItem.product.images[0]} alt={orderItem.product.title} width={50} height={50} /></TableCell>
-                            <TableCell className="underline"><Link href={`/products/${orderItem.product.id}`}>{orderItem.product.title}</Link></TableCell>
-                            <TableCell>₹{orderItem.product.price}</TableCell>
-                            <TableCell>{orderItem.quantity}</TableCell>
-                          </TableRow>
-                        ))}
-                      </TableBody>
-                    </Table>
-                  </div>
-                </TableCell>
-              </TableRow>
-            )}
-          </React.Fragment>
-        ))}
-      </TableBody>
-    </Table>
+          </TableHeader>
+          <TableBody>
+            {orders.map((order) => (
+              <React.Fragment key={order.id}>
+                <TableRow>
+                  <TableCell className="font-medium">{order.id}</TableCell>
+                  <TableCell>{format(new Date(order.createdAt), "PPP")}</TableCell>
+                  <TableCell>{order.order.status}</TableCell>
+                  <TableCell>{formatPrice(order.order.total)}</TableCell>
+                  <TableCell>
+                    <Button variant="outline" onClick={() => toggleOrderItems(order.id)}>
+                      {expandedOrderId === order.id ? "Hide Items" : "Show Items"}
+                    </Button>
+                  </TableCell>
+                </TableRow>
+                {expandedOrderId === order.id && (
+                  <TableRow>
+                    <TableCell colSpan={6}>
+                      <div className="ml-4 mt-2">
+                        <Table>
+                          <TableHeader>
+                            <TableRow>
+                              <TableHead>#</TableHead>
+                              <TableHead>Name</TableHead>
+                              <TableHead>Price</TableHead>
+                              <TableHead>Quantity</TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {order.order.orderItems.map((orderItem) => (
+                              <TableRow>
+                                <TableCell><img src={orderItem.product.images && orderItem.product.images[0]} alt={orderItem.product.title} width={50} height={50} /></TableCell>
+                                <TableCell className="underline"><Link href={`/products/${orderItem.product.id}`}>{orderItem.product.title}</Link></TableCell>
+                                <TableCell>₹{orderItem.product.price}</TableCell>
+                                <TableCell>{orderItem.quantity}</TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                )}
+              </React.Fragment>
+            ))}
+          </TableBody>
+        </Table>
+      )}
+    </ScrollArea>
   )
 }
