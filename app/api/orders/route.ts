@@ -3,7 +3,7 @@ import { getServerSession } from "next-auth"
 import { prisma } from "@/lib/prisma"
 import { authOptions } from "@/app/api/auth/[...nextauth]/route"
 import { Cart } from "@/lib/cart"
-import { log } from 'console'
+import { PaymentStatus } from "@prisma/client"
 
 export async function POST(req: Request) {
   try {
@@ -13,14 +13,9 @@ export async function POST(req: Request) {
       return new NextResponse("Unauthorized", { status: 401 })
     }
 
-    log(session)
-
     const body = await req.json()
     const items = body as Cart
-
-    log(body)
-    log(items)
-
+    
     if (!items?.cartItems.length) {
       return new NextResponse("No items in order", { status: 400 })
     }
@@ -47,6 +42,7 @@ export async function POST(req: Request) {
           total,
           address: items.address,
           phone: items.phone ?? "",
+          paymentStatus: PaymentStatus.PENDING,
           orderItems: {
             create: sellerItems.map((item) => ({
               productId: item.id,

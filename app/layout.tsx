@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/sonner"
 import Navbar from '@/components/navbar'
 import AuthProvider from '@/components/auth-provider'
 import Footer from '@/components/footer'
+import Script from 'next/script'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -21,6 +22,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning className='light'>
+      <Script src="https://checkout.razorpay.com/v1/checkout.js" />
       <body className={inter.className}>
         <AuthProvider>
           <ThemeProvider

@@ -14,19 +14,20 @@ import { Button } from "@/components/ui/button"
 import { Cart as CartType, useCart } from "@/lib/cart"
 import { toast } from "sonner"
 import { formatPrice } from "@/lib/price"
+import { CheckoutButton } from "./checkout-button"
 
-type UserAddress = {
-  address: {
-    street: string;
-    city: string;
-    state: string;
-    country: string;
-    postalCode: string;
-    phone: string;
-    id: string;
-    userId: string;
-  }
-}
+// type UserAddress = {
+//   address: {
+//     street: string;
+//     city: string;
+//     state: string;
+//     country: string;
+//     postalCode: string;
+//     phone: string;
+//     id: string;
+//     userId: string;
+//   }
+// }
 
 export default function Cart() {
   const router = useRouter()
@@ -34,43 +35,43 @@ export default function Cart() {
   const { items, removeItem, updateQuantity, clearCart, total } = useCart()
   const [isLoading, setIsLoading] = useState(false)
 
-  async function onCheckout() {
-    try {
+  // async function onCheckout() {
+  //   try {
 
-      const profileres = await fetch("/api/profile")
-      const user: UserAddress = await profileres.json()
-      
-      setIsLoading(true)
+  //     const profileres = await fetch("/api/profile")
+  //     const user: UserAddress = await profileres.json()
 
-      const cart: CartType = {
-        cartItems: items,
-        subTotal: total(),
-        address: `${user?.address?.street}, ${user?.address?.city}, ${user?.address?.state}, ${user?.address?.country}, ${user?.address?.postalCode}`,
-        phone: user?.address?.phone
-      }
+  //     setIsLoading(true)
 
-      const response = await fetch("/api/orders", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(cart),
-      })
+  //     const cart: CartType = {
+  //       cartItems: items,
+  //       subTotal: total(),
+  //       address: `${user?.address?.street}, ${user?.address?.city}, ${user?.address?.state}, ${user?.address?.country}, ${user?.address?.postalCode}`,
+  //       phone: user?.address?.phone
+  //     }
 
-      if (!response.ok) {
-        throw new Error("Failed to create order")
-      }
+  //     const response = await fetch("/api/orders", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify(cart),
+  //     })
 
-      clearCart()
-      setIsOpen(false)
-      toast.success("Order placed successfully!")
-      router.push("/my-profile")
-    } catch (error) {
-      toast.error("Please login or signup")
-    } finally {
-      setIsLoading(false)
-    }
-  }
+  //     if (!response.ok) {
+  //       throw new Error("Failed to create order")
+  //     }
+
+  //     clearCart()
+  //     setIsOpen(false)
+  //     toast.success("Order placed successfully!")
+  //     router.push("/my-profile")
+  //   } catch (error) {
+  //     toast.error("Please login or signup")
+  //   } finally {
+  //     setIsLoading(false)
+  //   }
+  // }
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -144,13 +145,15 @@ export default function Cart() {
                   <span>Total</span>
                   <span>{formatPrice(total())}</span>
                 </div>
-                <Button
+                {/* <Button
                   className="w-full mt-4"
                   onClick={onCheckout}
                   disabled={isLoading}
                 >
                   {isLoading ? "Processing..." : "Checkout"}
-                </Button>
+                </Button> */}
+
+                <CheckoutButton setIsLoading={setIsLoading} setIsOpen={setIsOpen} isLoading={isLoading} />
               </div>
             </div>
           )}

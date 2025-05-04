@@ -40,21 +40,22 @@ model Session {
 }
 
 model User {
-  id             String         @id @default(auto()) @map("_id") @db.ObjectId
+  id             String           @id @default(auto()) @map("_id") @db.ObjectId
   name           String?
-  email          String?        @unique
+  email          String?          @unique
   emailVerified  DateTime?
   image          String?
   hashedPassword String?
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
-  role           String         @default("USER")
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  role           String           @default("USER")
   address        Address?
   products       Product[]
   orders         Order[]
   accounts       Account[]
   sessions       Session[]
   notifications  Notification[]
+  PaymentSession PaymentSession[]
 }
 
 model Address {
@@ -105,19 +106,31 @@ enum OrderStatus {
   CANCELED
 }
 
+enum PaymentStatus {
+  PAID
+  PENDING
+  FAILED
+}
+
 model Order {
-  id           String        @id @default(auto()) @map("_id") @db.ObjectId
-  userId       String        @db.ObjectId
-  status       OrderStatus   @default(PENDING)
-  total        Float
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  user         User          @relation(fields: [userId], references: [id])
-  orderItems   OrderItem[]
-  notification Notification?
-  address      String
-  phone        String
-  sellerOrder  SellerOrder?  @relation("OrderToSellerOrder") // no fields or references
+  id                String          @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String          @db.ObjectId
+  status            OrderStatus     @default(PENDING)
+  total             Float
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  user              User            @relation(fields: [userId], references: [id])
+  orderItems        OrderItem[]
+  notification      Notification?
+  address           String
+  phone             String
+  sellerOrder       SellerOrder?    @relation("OrderToSellerOrder") // no fields or references
+  paymentStatus     PaymentStatus   @default(PENDING)
+  razorpayPaymentId String? // Razorpay payment ID
+  razorpayOrderId   String? // Razorpay order ID
+  signature         String? // Razorpay signature
+  paymentSessionId  String?         @db.ObjectId
+  paymentSession    PaymentSession? @relation(fields: [paymentSessionId], references: [id])
 }
 
 model OrderItem {
@@ -139,6 +152,19 @@ model SellerOrder {
   order        Order    @relation("OrderToSellerOrder", fields: [orderId], references: [id])
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+}
+
+model PaymentSession {
+  id                String        @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String        @db.ObjectId
+  user              User          @relation(fields: [userId], references: [id])
+  amount            Float
+  status            PaymentStatus @default(PENDING)
+  razorpayOrderId   String?
+  razorpayPaymentId String?
+  razorpaySignature String?
+  createdAt         DateTime      @default(now())
+  orders            Order[]
 }
 
 model Notification {

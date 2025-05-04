@@ -20,23 +20,19 @@ import Link from "next/link"
 import { ScrollArea } from "./ui/scroll-area"
 import { Package } from "lucide-react"
 
-type SellerOrderWithRelations = Prisma.SellerOrderGetPayload<{
+type OrderWithRelations = Prisma.OrderGetPayload<{
   include: {
-    order: {
+    orderItems: {
       include: {
-        orderItems: {
-          include: {
-            product: true
-          }
-        }
-      }
-    }
-  }
-}>
+        product: true;
+      };
+    };
+  };
+}>;
 
 export default function OrderList() {
   const { data: session, status } = useSession() // Get session and status from NextAuth
-  const [orders, setOrders] = useState<SellerOrderWithRelations[]>([])
+  const [orders, setOrders] = useState<OrderWithRelations[]>([])
   const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null) // State to manage which order's items are expanded
   const router = useRouter() // Initialize router for redirection
 
@@ -59,6 +55,8 @@ export default function OrderList() {
     setExpandedOrderId((prev) => (prev === orderId ? null : orderId)) // Toggle visibility of order items for this order
   }
 
+  console.log(orders)
+
   return (
     <ScrollArea className="h-[400px] rounded-md border p-4">
       {orders.length === 0 ? (
@@ -74,6 +72,7 @@ export default function OrderList() {
               <TableHead>Order Date</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Total</TableHead>
+              <TableHead>Payment Status</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -82,8 +81,9 @@ export default function OrderList() {
                 <TableRow>
                   <TableCell className="font-medium">{order.id}</TableCell>
                   <TableCell>{format(new Date(order.createdAt), "PPP")}</TableCell>
-                  <TableCell>{order.order.status}</TableCell>
-                  <TableCell>{formatPrice(order.order.total)}</TableCell>
+                  <TableCell>{order.status}</TableCell>
+                  <TableCell>{formatPrice(order.total)}</TableCell>
+                  <TableCell>{order.paymentStatus}</TableCell>
                   <TableCell>
                     <Button variant="outline" onClick={() => toggleOrderItems(order.id)}>
                       {expandedOrderId === order.id ? "Hide Items" : "Show Items"}
@@ -104,7 +104,7 @@ export default function OrderList() {
                             </TableRow>
                           </TableHeader>
                           <TableBody>
-                            {order.order.orderItems.map((orderItem) => (
+                            {order.orderItems.map((orderItem) => (
                               <TableRow>
                                 <TableCell><img src={orderItem.product.images && orderItem.product.images[0]} alt={orderItem.product.title} width={50} height={50} /></TableCell>
                                 <TableCell className="underline"><Link href={`/products/${orderItem.product.id}`}>{orderItem.product.title}</Link></TableCell>
