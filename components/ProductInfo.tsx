@@ -17,8 +17,8 @@ const ProductInfo: React.FC<ProductInfoProps> = ({ title, category, description 
 
             <h1 className="text-3xl font-bold text-gray-900 sm:text-4xl">{title}</h1>
 
-            <div className="mt-4 prose prose-slate prose-p:text-gray-600 max-w-none">
-                <p>{description}</p>
+            <div className="prose prose-slate prose-p:text-gray-600 max-w-none">
+                <div className="list-disc pl-5" dangerouslySetInnerHTML={{ __html: description }} />
             </div>
         </div>
     );

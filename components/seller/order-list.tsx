@@ -141,17 +141,23 @@ export default function OrderList() {
                 </React.Fragment>
               )}
 
-              <TableCell>
-                <Button title="mark in progress" variant="outline" onClick={() => handleInProgress(order.order.id)}>🚚</Button>
-              </TableCell>
+              {order.order.status && (order.order.status === OrderStatus.ACCEPTED || order.order.status === OrderStatus.PENDING) &&
+                <TableCell>
+                  <Button title="mark in progress" variant="outline" onClick={() => handleInProgress(order.order.id)}>🚚</Button>
+                </TableCell>
+              }
 
-              <TableCell>
-                <Button title="mark complete" variant="outline" onClick={() => handleComplete(order.order.id)}>✔</Button>
-              </TableCell>
+              {order.order.status && (order.order.status === OrderStatus.INPROGRESS) &&
+                <TableCell>
+                  <Button title="mark complete" variant="outline" onClick={() => handleComplete(order.order.id)}>✔</Button>
+                </TableCell>
+              }
 
-              <TableCell>
-                <Button title="mark cancel" variant="outline" onClick={() => handleCancel(order.order.id)}>❌</Button>
-              </TableCell>
+              {order.order.status && (order.order.status !== OrderStatus.CANCELED && order.order.status !== OrderStatus.REJECTED && order.order.status !== OrderStatus.COMPLETED) &&
+                <TableCell>
+                  <Button title="mark cancel" variant="outline" onClick={() => handleCancel(order.order.id)}>❌</Button>
+                </TableCell>
+              }
 
               <TableCell>
                 <Button variant="outline" onClick={() => toggleOrderItems(order.id)}>

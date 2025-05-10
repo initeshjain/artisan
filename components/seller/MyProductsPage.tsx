@@ -67,7 +67,6 @@ export default function MyProductsPage() {
             {editingProductId && (
                 <EditProductForm id={editingProductId} onClose={closeEditModal} />
             )}
-            <h1 className="text-2xl font-semibold mb-6">My Products</h1>
             <div className="space-y-4">
                 {products.map((product) => (
                     <div

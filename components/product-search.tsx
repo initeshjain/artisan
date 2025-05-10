@@ -30,8 +30,8 @@ export function ProductSearch() {
         className="pl-9"
         defaultValue={searchParams.get("q") ?? ""}
       />
-      <Button type="submit" className="absolute right-1 top-1">
-        Search
+      <Button variant="outline" type="submit" className="absolute right-0 top-0">
+        <Search className="absolute top-3 h-4 w-4 text-muted-foreground" />
       </Button>
     </form>
   )

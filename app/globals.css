@@ -81,4 +81,8 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  ul {
+    list-style: inside;
+  }
 }

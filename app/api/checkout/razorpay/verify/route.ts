@@ -1,11 +1,17 @@
-// app/api/checkout/verify/route.ts
 import crypto from "crypto"
 import { prisma } from "@/lib/prisma"
 import { NextResponse } from "next/server"
 
+type VerifyRequestBody = {
+    razorpay_order_id: string
+    razorpay_payment_id: string
+    razorpay_signature: string
+    paymentSessionId: string
+}
+
 export async function POST(req: Request) {
     try {
-        const body = await req.json()
+        const body: VerifyRequestBody = await req.json()
         const {
             razorpay_order_id,
             razorpay_payment_id,

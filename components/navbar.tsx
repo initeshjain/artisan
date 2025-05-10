@@ -11,8 +11,8 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Package, Search } from "lucide-react"
-import { Input } from "@/components/ui/input"
 import Cart from "./cart"
+import { ProductSearch } from "./product-search"
 
 export default function Navbar() {
   const { data: session } = useSession()
@@ -30,8 +30,9 @@ export default function Navbar() {
 
         <div className="hidden md:flex items-center gap-6 flex-1 max-w-md mx-6">
           <div className="relative w-full">
-            <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input placeholder="Search products..." className="pl-8" />
+            {/* <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input placeholder="Search products..." className="pl-8" /> */}
+            <ProductSearch />
           </div>
         </div>
 
@@ -58,9 +59,9 @@ export default function Navbar() {
                   </Avatar>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuItem>Profile</DropdownMenuItem>
-                  <DropdownMenuItem>Orders</DropdownMenuItem>
-                  <DropdownMenuItem>Settings</DropdownMenuItem>
+                  <DropdownMenuItem><Link href="/my-profile">Profile</Link></DropdownMenuItem>
+                  {/* <DropdownMenuItem><Link href="/my-profile">Orders</Link></DropdownMenuItem>
+                  <DropdownMenuItem>Settings</DropdownMenuItem> */}
                   <DropdownMenuItem onClick={() => signOut()}>
                     Logout
                   </DropdownMenuItem>

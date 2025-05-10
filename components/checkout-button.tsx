@@ -76,10 +76,14 @@ export function CheckoutButton({
                 key: razorpayKey,
                 amount: Math.round(cart.subTotal * 100),
                 currency: "INR",
-                name: "Artisan",
+                name: user.name,
                 description: "Order Payment",
                 order_id: razorpayOrderId,
                 handler: async function (response: any) {
+
+                    // log
+                    console.info(Date.now(), user.name, response.razorpay_order_id, response.razorpay_payment_id, response.razorpay_signature)
+
                     // Step 3: On success, verify
                     const verifyRes = await fetch("/api/checkout/razorpay/verify", {
                         method: "POST",

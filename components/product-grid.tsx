@@ -15,6 +15,7 @@ import {
 import { formatPrice } from "@/lib/price"
 import { Category } from "@prisma/client"
 import { ProductWithCategoryAndSeller } from "@/types/types"
+import React from "react"
 
 export default function ProductGrid({ products, categories }: { products: ProductWithCategoryAndSeller[], categories: Category[] }) {
   const [selectedCategory, setSelectedCategory] = useState("")
@@ -24,7 +25,7 @@ export default function ProductGrid({ products, categories }: { products: Produc
     : products;
 
   return (
-    <div>
+    <React.Fragment>
       <div className="mb-6">
         <Select value={selectedCategory} onValueChange={setSelectedCategory}>
           <SelectTrigger className="w-[200px]">
@@ -68,6 +69,6 @@ export default function ProductGrid({ products, categories }: { products: Produc
           </Link>
         ))}
       </div>
-    </div>
+    </React.Fragment>
   )
 }

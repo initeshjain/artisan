@@ -120,6 +120,11 @@ export default function EditProductForm({ id, onClose }: { id: string; onClose: 
           {/* Description */}
           <div>
             <label htmlFor="description" className="block mb-1 text-sm font-medium text-gray-700">Description</label>
+
+            <div className="mb-2 text-xs text-blue-600 bg-blue-50 border border-blue-200 rounded px-2 py-1 inline-block">
+              💡 Tip: You can paste HTML here to nicely format your description
+            </div>
+
             <Textarea
               id="description"
               name="description"
@@ -129,6 +134,7 @@ export default function EditProductForm({ id, onClose }: { id: string; onClose: 
               disabled={isLoading}
             />
           </div>
+
 
           {/* Price */}
           <div>
@@ -176,6 +182,9 @@ export default function EditProductForm({ id, onClose }: { id: string; onClose: 
           {/* Image Input */}
           <div>
             <label className="block mb-1 text-sm font-medium text-gray-700">Images</label>
+            <div className="mb-2 text-xs text-blue-600 bg-blue-50 border border-blue-200 rounded px-2 py-1 inline-block">
+              📝 Note: You need to upload images on platform like imagekit and paste public link here
+            </div>
             <Input
               type="url"
               placeholder="Image URL"
