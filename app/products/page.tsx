@@ -1,7 +1,10 @@
+export const dynamic = "force-dynamic"
+
 import { prisma } from "@/lib/prisma"
 import ProductGrid from "@/components/product-grid"
 import { ProductSearch } from "@/components/product-search"
 import { ProductWithCategoryAndSeller } from "@/types/types"
+import { Suspense } from "react";
 
 export default async function ProductsPage({
   searchParams,
@@ -46,7 +49,9 @@ export default async function ProductsPage({
     <div className="container p-8">
       <h1 className="text-3xl font-bold mb-8">Browse Artworks</h1>
       <div className="mb-8">
-        <ProductSearch />
+        <Suspense fallback={<div>Loading...</div>}>
+          <ProductSearch />
+        </Suspense>
       </div>
       <ProductGrid products={products} categories={categories} />
     </div>

@@ -55,8 +55,6 @@ export default function OrderList() {
     setExpandedOrderId((prev) => (prev === orderId ? null : orderId)) // Toggle visibility of order items for this order
   }
 
-  console.log(orders)
-
   return (
     <ScrollArea className="h-[400px] rounded-md border p-4">
       {orders.length === 0 ? (

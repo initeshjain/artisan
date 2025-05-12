@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import { getServerSession } from "next-auth"
 import { prisma } from "@/lib/prisma"
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { authOptions } from "@/lib/auth"
 
 export async function PATCH(
   req: Request,
@@ -40,7 +40,7 @@ export async function PATCH(
 
     return NextResponse.json(updatedNotification)
   } catch (error) {
-    console.log("[NOTIFICATION_PATCH]", error)
+    console.error("[NOTIFICATION_PATCH]", error)
     return new NextResponse("Internal error", { status: 500 })
   }
 }

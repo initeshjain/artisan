@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import { getServerSession } from "next-auth"
 import { prisma } from "@/lib/prisma"
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { authOptions } from "@/lib/auth"
 
 export async function POST(req: Request) {
   try {
@@ -38,7 +38,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json(category)
   } catch (error) {
-    console.log("[CATEGORIES_POST]", error)
+    console.error("[CATEGORIES_POST]", error)
     return new NextResponse("Internal error", { status: 500 })
   }
 }
@@ -56,7 +56,7 @@ export async function GET() {
 
     return NextResponse.json(categories)
   } catch (error) {
-    console.log("[CATEGORIES_GET]", error)
+    console.error("[CATEGORIES_GET]", error)
     return new NextResponse("Internal error", { status: 500 })
   }
 }

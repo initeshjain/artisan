@@ -13,6 +13,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Package, Search } from "lucide-react"
 import Cart from "./cart"
 import { ProductSearch } from "./product-search"
+import { Suspense } from "react"
 
 export default function Navbar() {
   const { data: session } = useSession()
@@ -32,7 +33,9 @@ export default function Navbar() {
           <div className="relative w-full">
             {/* <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input placeholder="Search products..." className="pl-8" /> */}
-            <ProductSearch />
+            <Suspense fallback={<div>Loading...</div>}>
+              <ProductSearch />
+            </Suspense>
           </div>
         </div>
 

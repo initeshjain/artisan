@@ -5,8 +5,9 @@ import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { toast } from "sonner"
+import { FullUser } from "@/types/types"
 
-export default function ProfileForm({ user }) {
+export default function ProfileForm({ user }: { user: FullUser }) {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
 

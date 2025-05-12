@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import { getServerSession } from "next-auth"
 import { prisma } from "@/lib/prisma"
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { authOptions } from "@/lib/auth"
 
 export async function GET(
   req: Request,
@@ -38,7 +38,7 @@ export async function GET(
 
     return NextResponse.json(order)
   } catch (error) {
-    console.log("[ORDER_GET]", error)
+    console.error("[ORDER_GET]", error)
     return new NextResponse("Internal error", { status: 500 })
   }
 }
@@ -90,7 +90,7 @@ export async function PATCH(
 
     return NextResponse.json(updatedOrder)
   } catch (error) {
-    console.log("[ORDER_PATCH]", error)
+    console.error("[ORDER_PATCH]", error)
     return new NextResponse("Internal error", { status: 500 })
   }
 }

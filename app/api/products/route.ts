@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic"
+
 import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 
@@ -37,7 +39,7 @@ export async function GET(req: Request) {
 
     return NextResponse.json(products)
   } catch (error) {
-    console.log("[PRODUCTS_GET]", error)
+    console.error("[PRODUCTS_GET]", error)
     return new NextResponse("Internal error", { status: 500 })
   }
 }

@@ -5,26 +5,12 @@ import { useRouter } from "next/navigation"
 import { Dispatch, SetStateAction } from "react"
 import { toast } from "sonner"
 import { Button } from "./ui/button"
+import { UserWithAddress } from "@/types/types"
 
 type RazorpayResponse = {
     razorpayOrderId: string
     paymentSessionId: string
     razorpayKey: string
-}
-
-type UserAddress = {
-    name: string,
-    email: string,
-    address: {
-        street: string;
-        city: string;
-        state: string;
-        country: string;
-        postalCode: string;
-        phone: string;
-        id: string;
-        userId: string;
-    }
 }
 
 export function CheckoutButton({
@@ -45,7 +31,7 @@ export function CheckoutButton({
             setIsLoading(true)
 
             const profileres = await fetch("/api/profile")
-            const user: UserAddress = await profileres.json()
+            const user: UserWithAddress = await profileres.json()
 
             const cart: CartType = {
                 cartItems: items,
@@ -120,7 +106,7 @@ export function CheckoutButton({
 
             razorpay.open()
         } catch (error) {
-            console.log(error)
+            console.error(error)
             toast.error("Please login or try again")
         } finally {
             setIsLoading(false)

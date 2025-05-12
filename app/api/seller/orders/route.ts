@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import { getServerSession } from "next-auth"
 import { prisma } from "@/lib/prisma"
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { authOptions } from "@/lib/auth"
 import { OrderStatus } from "@prisma/client"
 
 export async function GET(req: Request) {
@@ -34,7 +34,7 @@ export async function GET(req: Request) {
 
         return NextResponse.json(orders)
     } catch (error) {
-        console.log("[SELLERS_ORDERS_GET]", error)
+        console.error("[SELLERS_ORDERS_GET]", error)
         return new NextResponse("Internal error", { status: 500 })
     }
 }
@@ -68,12 +68,6 @@ export async function PUT(req: Request) {
             },
         })
 
-        console.log(orderId)
-        console.log(sellerOrder)
-
-        console.log(sellerOrder?.sellerUserId)
-        console.log(session.user.id)
-
         // Check if the order exists and belongs to the current user
         if (!sellerOrder || sellerOrder?.sellerUserId !== session.user.id) {
             return new NextResponse("Forbidden: Order not found or not owned by user", { status: 403 })
@@ -91,7 +85,7 @@ export async function PUT(req: Request) {
 
         return NextResponse.json(updatedOrder)
     } catch (error) {
-        console.log("[SELLERS_ORDERS_PUT]", error)
+        console.error("[SELLERS_ORDERS_PUT]", error)
         return new NextResponse("Internal error", { status: 500 })
     }
 }

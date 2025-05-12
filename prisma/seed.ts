@@ -41,7 +41,7 @@ async function main() {
 
     // Create users
     const hashedPassword = await bcrypt.hash("password123", 10)
-    
+
     const users = await Promise.all([
       prisma.user.create({
         data: {
@@ -88,7 +88,7 @@ async function main() {
           price: 89.99,
           images: ["https://images.unsplash.com/photo-1635363638580-6c3c5e599343?w=800&q=80"],
           categoryId: categories[0].id,
-          userId: users[0].id,
+          sellerId: users[0].id,
           keywords: ["bowl", "wooden", "handcrafted", "maple"],
         },
       }),
@@ -99,7 +99,7 @@ async function main() {
           price: 199.99,
           images: ["https://images.unsplash.com/photo-1581974944026-5d6ed762f617?w=800&q=80"],
           categoryId: categories[1].id,
-          userId: users[0].id,
+          sellerId: users[0].id,
           keywords: ["wall art", "abstract", "modern", "reclaimed"],
         },
       }),
@@ -110,7 +110,7 @@ async function main() {
           price: 299.99,
           images: ["https://images.unsplash.com/photo-1595856619767-ab951ca3b5c7?w=800&q=80"],
           categoryId: categories[0].id,
-          userId: users[1].id,
+          sellerId: users[1].id,
           keywords: ["sculpture", "contemporary", "decoration"],
         },
       }),
@@ -120,6 +120,8 @@ async function main() {
     const orders = await Promise.all([
       prisma.order.create({
         data: {
+          phone: "1234567894",
+          address: "",
           userId: users[1].id,
           total: 89.99,
           status: "COMPLETED",
@@ -141,6 +143,8 @@ async function main() {
       }),
       prisma.order.create({
         data: {
+          phone: "1234567894",
+          address: "",
           userId: users[0].id,
           total: 299.99,
           status: "PENDING",
@@ -162,7 +166,7 @@ async function main() {
       }),
     ])
 
-    console.log("Seed data created successfully")
+    console.info("Seed data created successfully")
   } catch (error) {
     console.error("Error seeding data:", error)
     throw error

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import { getServerSession } from "next-auth"
 import { prisma } from "@/lib/prisma"
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { authOptions } from "@/lib/auth"
 import { Cart } from "@/lib/cart"
 import { PaymentStatus } from "@prisma/client"
 
@@ -15,7 +15,7 @@ export async function POST(req: Request) {
 
     const body = await req.json()
     const items = body as Cart
-    
+
     if (!items?.cartItems.length) {
       return new NextResponse("No items in order", { status: 400 })
     }
@@ -77,7 +77,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json(createdOrders)
   } catch (error) {
-    console.log("[ORDERS_POST]", error)
+    console.error("[ORDERS_POST]", error)
     return new NextResponse("Internal error", { status: 500 })
   }
 }
@@ -108,7 +108,7 @@ export async function GET(req: Request) {
 
     return NextResponse.json(orders)
   } catch (error) {
-    console.log("[ORDERS_GET]", error)
+    console.error("[ORDERS_GET]", error)
     return new NextResponse("Internal error", { status: 500 })
   }
 }

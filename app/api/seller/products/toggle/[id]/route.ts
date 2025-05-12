@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { prisma } from "@/lib/prisma";
-import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { authOptions } from "@/lib/auth";
 
 export async function PUT(req: Request, { params }: { params: { id: string } }) {
     try {
@@ -10,7 +10,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
         if (!session?.user?.id) {
             return new NextResponse("Unauthorized", { status: 401 });
         }
-        
+
         const id = params.id;
 
         const { isActive } = await req.json();

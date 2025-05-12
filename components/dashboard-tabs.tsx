@@ -6,9 +6,9 @@ import { Card } from "@/components/ui/card"
 import OrderList from "@/components/order-list"
 import NotificationList from "@/components/notification-list"
 import ProfileForm from "@/components/profile-form"
-import { User } from "@prisma/client"
+import { FullUser } from "@/types/types"
 
-export default function DashboardTabs({ user }: { user: User }) {
+export default function DashboardTabs({ user }: { user: FullUser }) {
   const [activeTab, setActiveTab] = useState("profile")
 
   return (

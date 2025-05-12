@@ -19,7 +19,6 @@ import React from "react"
 
 export default function ProductGrid({ products, categories }: { products: ProductWithCategoryAndSeller[], categories: Category[] }) {
   const [selectedCategory, setSelectedCategory] = useState("")
-  console.log(categories)
   const filteredProducts = selectedCategory && selectedCategory != "All"
     ? products.filter((product) => product.categoryId === selectedCategory)
     : products;

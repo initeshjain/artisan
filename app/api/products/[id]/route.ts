@@ -28,7 +28,7 @@ export async function GET(
 
     return NextResponse.json(product)
   } catch (error) {
-    console.log("[PRODUCT_GET]", error)
+    console.error("[PRODUCT_GET]", error)
     return new NextResponse("Internal error", { status: 500 })
   }
 }

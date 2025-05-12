@@ -1,7 +1,9 @@
+export const dynamic = "force-dynamic"
+
 import { NextResponse } from "next/server"
 import { getServerSession } from "next-auth"
 import { prisma } from "@/lib/prisma"
-import { authOptions } from "@/app/api/auth/[...nextauth]/route"
+import { authOptions } from "@/lib/auth"
 
 export async function GET(req: Request) {
   try {
@@ -22,7 +24,7 @@ export async function GET(req: Request) {
 
     return NextResponse.json(notifications)
   } catch (error) {
-    console.log("[NOTIFICATIONS_GET]", error)
+    console.error("[NOTIFICATIONS_GET]", error)
     return new NextResponse("Internal error", { status: 500 })
   }
 }

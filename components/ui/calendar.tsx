@@ -54,8 +54,7 @@ function Calendar({
         ...classNames,
       }}
       components={{
-        IconLeft: ({ ...props }) => <ChevronLeft className="h-4 w-4" />,
-        IconRight: ({ ...props }) => <ChevronRight className="h-4 w-4" />,
+        Nav: CustomNavigation,
       }}
       {...props}
     />
@@ -63,4 +62,36 @@ function Calendar({
 }
 Calendar.displayName = 'Calendar';
 
+
+function CustomNavigation({ nextMonth, previousMonth, goToMonth }: any) {
+  return (
+    <div className="space-x-1 flex items-center absolute right-1">
+      <button
+        type="button"
+        onClick={() => goToMonth(previousMonth)}
+        className={cn(
+          buttonVariants({ variant: 'outline' }),
+          'h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100'
+        )}
+        aria-label="Previous month"
+      >
+        <ChevronLeft className="h-4 w-4" />
+      </button>
+      <button
+        type="button"
+        onClick={() => goToMonth(nextMonth)}
+        className={cn(
+          buttonVariants({ variant: 'outline' }),
+          'h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100'
+        )}
+        aria-label="Next month"
+      >
+        <ChevronRight className="h-4 w-4" />
+      </button>
+    </div>
+  );
+}
+
+
 export { Calendar };
+
