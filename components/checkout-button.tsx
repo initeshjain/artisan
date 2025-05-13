@@ -92,7 +92,7 @@ export function CheckoutButton({
                     clearCart()
                     setIsOpen(false)
                     toast.success("Order placed successfully!")
-                    router.push("/my-profile")
+                    router.push("/profile")
                 },
                 prefill: {
                     name: user?.name,

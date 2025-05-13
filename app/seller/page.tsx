@@ -6,7 +6,7 @@ import Link from "next/link";
 export default async function ProductsPage() {
 
     return (
-        <div className="min-h-screen max-w-screen mx-28 p-6 ">
+        <div className="min-h-screen max-w-screen md:mx-28 p-6">
 
             <StatsCard />
 

@@ -2,7 +2,6 @@
 
 import { useState } from "react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Card } from "@/components/ui/card"
 import OrderList from "@/components/order-list"
 import NotificationList from "@/components/notification-list"
 import ProfileForm from "@/components/profile-form"
@@ -20,24 +19,20 @@ export default function DashboardTabs({ user }: { user: FullUser }) {
       </TabsList>
 
       <TabsContent value="profile">
-        <Card className="p-6">
+        {/* <Card className="p-6"> */}
           <h2 className="text-2xl font-semibold mb-6">Profile</h2>
           <ProfileForm user={user} />
-        </Card>
+        {/* </Card> */}
       </TabsContent>
 
       <TabsContent value="orders">
-        <Card className="p-6">
-          <h2 className="text-2xl font-semibold mb-6">Orders</h2>
-          <OrderList />
-        </Card>
+        <h2 className="text-2xl font-semibold mb-6">Orders</h2>
+        <OrderList />
       </TabsContent>
 
       <TabsContent value="notifications">
-        <Card className="p-6">
-          <h2 className="text-2xl font-semibold mb-6">Notifications</h2>
-          <NotificationList />
-        </Card>
+        <h2 className="text-2xl font-semibold mb-6">Notifications</h2>
+        <NotificationList />
       </TabsContent>
     </Tabs>
   )

@@ -30,63 +30,29 @@ export default function StatsCard() {
         fetchStats()
     }, [])
 
-    if (!stats) return <div>Loading stats...</div>
+    if (!stats) return <div className="text-center py-10 text-gray-500">Loading stats...</div>
 
     return (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6 mb-6">
-            <Card>
-                <CardHeader>
-                    <CardTitle className="font-light">Total Orders</CardTitle>
-                </CardHeader>
-                <CardContent className="text-2xl font-bold">
-                    {stats.totalOrders}
-                </CardContent>
-            </Card>
-
-            <Card>
-                <CardHeader>
-                    <CardTitle className="font-light">Completed Orders</CardTitle>
-                </CardHeader>
-                <CardContent className="text-2xl font-bold">
-                    {stats.completedOrders}
-                </CardContent>
-            </Card>
-
-            <Card>
-                <CardHeader>
-                    <CardTitle className="font-light">Total Revenue</CardTitle>
-                </CardHeader>
-                <CardContent className="text-2xl font-bold">
-                    ₹{stats.totalRevenue.toFixed(2)}
-                </CardContent>
-            </Card>
-
-            <Card>
-                <CardHeader>
-                    <CardTitle className="font-light">GST (18%)</CardTitle>
-                </CardHeader>
-                <CardContent className="text-2xl font-bold">
-                    ₹{stats.gst.toFixed(2)}
-                </CardContent>
-            </Card>
-
-            <Card>
-                <CardHeader>
-                    <CardTitle className="font-light">Commission (1%)</CardTitle>
-                </CardHeader>
-                <CardContent className="text-2xl font-bold">
-                    ₹{stats.commission.toFixed(2)}
-                </CardContent>
-            </Card>
-
-            <Card>
-                <CardHeader>
-                    <CardTitle className="font-light">Net Earnings</CardTitle>
-                </CardHeader>
-                <CardContent className="text-2xl font-bold text-green-600">
-                    ₹{stats.netEarnings.toFixed(2)}
-                </CardContent>
-            </Card>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4 sm:p-6">
+            {[
+                { title: "Total Orders", value: stats.totalOrders },
+                { title: "Completed Orders", value: stats.completedOrders },
+                { title: "Total Revenue", value: `₹${stats.totalRevenue.toFixed(2)}` },
+                { title: "GST (18%)", value: `₹${stats.gst.toFixed(2)}` },
+                { title: "Commission (1%)", value: `₹${stats.commission.toFixed(2)}` },
+                { title: "Net Earnings", value: `₹${stats.netEarnings.toFixed(2)}`, className: "text-green-600" },
+            ].map((item, index) => (
+                <Card key={index} className="hover:shadow-md transition-shadow duration-200">
+                    <CardHeader>
+                        <CardTitle className="font-light  text-gray-600">
+                            {item.title}
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent className={`text-2xl sm:text-3xl font-semibold break-words ${item.className ?? ""}`}>
+                        {item.value}
+                    </CardContent>
+                </Card>
+            ))}
         </div>
     )
 }

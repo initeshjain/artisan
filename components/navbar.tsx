@@ -46,12 +46,12 @@ export default function Navbar() {
 
           {session ? (
             <>
-              <Link href="/seller">
+              {/* <Link href="/seller">
                 <Button variant="ghost">Seller</Button>
               </Link>
               <Link href="/my-profile">
                 <Button variant="ghost">My Profile</Button>
-              </Link>
+              </Link> */}
               <DropdownMenu>
                 <DropdownMenuTrigger>
                   <Avatar>
@@ -62,9 +62,9 @@ export default function Navbar() {
                   </Avatar>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  <DropdownMenuItem><Link href="/my-profile">Profile</Link></DropdownMenuItem>
-                  {/* <DropdownMenuItem><Link href="/my-profile">Orders</Link></DropdownMenuItem>
-                  <DropdownMenuItem>Settings</DropdownMenuItem> */}
+                  <DropdownMenuItem><Link href="/profile">Profile</Link></DropdownMenuItem>
+                  <DropdownMenuItem><Link href="/seller">Seller</Link></DropdownMenuItem>
+                  {/* <DropdownMenuItem>Settings</DropdownMenuItem> */}
                   <DropdownMenuItem onClick={() => signOut()}>
                     Logout
                   </DropdownMenuItem>

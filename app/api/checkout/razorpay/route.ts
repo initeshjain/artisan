@@ -59,7 +59,7 @@ export async function POST(req: Request) {
                     create: {
                         userId: session.user.id,
                         type: "ORDER_CREATED",
-                        message: `Order placed with seller ${sellerId}. Total: ₹${total.toFixed(2)}`,
+                        message: `Order placed. You will get dispatch update soon. Total: ₹${total.toFixed(2)}`,
                     },
                 },
             },

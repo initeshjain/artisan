@@ -46,7 +46,7 @@ export default async function ProductsPage({
   })
 
   return (
-    <div className="container p-8">
+    <div className="min-h-screen max-w-screen md:mx-28 p-6">
       <h1 className="text-3xl font-bold mb-8">Browse Artworks</h1>
       <div className="mb-8">
         <Suspense fallback={<div>Loading...</div>}>
