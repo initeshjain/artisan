@@ -24,6 +24,7 @@ export default async function ProductsPage({
             ],
           }
           : {},
+        { isActive: true },
         category ? { categoryId: category } : {},
       ],
     },

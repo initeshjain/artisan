@@ -44,9 +44,9 @@ export default function ProductDetails({ product }: { product: ProductWithCatego
             <div className="rounded-lg bg-gray-50 p-4">
               <h3 className="text-sm font-medium text-gray-900">Details</h3>
               <div className="mt-2 text-sm text-gray-500 space-y-2">
-                <p>Free shipping on orders over $50</p>
-                <p>30-day hassle-free returns</p>
-                <p>2-year warranty included</p>
+                <p>Free shipping on orders over Rs 799</p>
+                <p>7-day hassle-free returns</p>
+                <p>Quality products only</p>
               </div>
             </div>
           </div>

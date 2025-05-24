@@ -13,6 +13,7 @@ type Product = {
   title: string
   price: number
   images: string[]
+  link: string
 }
 
 export default function FeaturedProducts() {
@@ -26,21 +27,24 @@ export default function FeaturedProducts() {
       setProducts([
         {
           id: "1",
-          title: "Handcrafted Wooden Bowl",
-          price: 89.99,
-          images: ["https://images.unsplash.com/photo-1635363638580-6c3c5e599343?w=800&q=80"],
+          title: "Handcrafted Bomboo Bottle",
+          price: 499,
+          images: ["https://ik.imagekit.io/noobgeek/Artisan/bomboo-bottle.webp?updatedAt=1748071525344"],
+          link: "/products/6831785e21d12192ba1f654e"
         },
         {
           id: "2",
-          title: "Carved Wall Art",
-          price: 199.99,
-          images: ["https://images.unsplash.com/photo-1581974944026-5d6ed762f617?w=800&q=80"],
+          title: "Wooden Hand Fan",
+          price: 299,
+          images: ["https://ik.imagekit.io/noobgeek/Artisan/wooden-hand-fan.webp?updatedAt=1748071525527"],
+          link: "/products/683179a321d12192ba1f654f"
         },
         {
           id: "3",
-          title: "Wooden Sculpture",
-          price: 299.99,
-          images: ["https://images.unsplash.com/photo-1595856619767-ab951ca3b5c7?w=800&q=80"],
+          title: "Wooden Hand Made Table Stand",
+          price: 4999,
+          images: ["https://ik.imagekit.io/noobgeek/Artisan/wooden-handmade-table-stand.webp?updatedAt=1748071525519"],
+          link: "/products/683179ef21d12192ba1f6550"
         },
       ])
       setLoading(false)
@@ -53,7 +57,7 @@ export default function FeaturedProducts() {
         {[1, 2, 3].map((i) => (
           <Card key={i} className="overflow-hidden">
             <CardContent className="p-0">
-              <AspectRatio ratio={4/3}>
+              <AspectRatio ratio={4 / 3}>
                 <Skeleton className="h-full w-full" />
               </AspectRatio>
             </CardContent>
@@ -72,20 +76,22 @@ export default function FeaturedProducts() {
       {products.map((product) => (
         <Link href={`/products/${product.id}`} key={product.id}>
           <Card className="overflow-hidden hover:shadow-lg transition-shadow">
-            <CardContent className="p-0">
-              <AspectRatio ratio={4/3}>
-                <Image
-                  src={product.images[0]}
-                  alt={product.title}
-                  fill
-                  className="object-cover"
-                />
-              </AspectRatio>
-            </CardContent>
-            <CardFooter className="flex-col items-start gap-2 p-4">
-              <h3 className="font-semibold">{product.title}</h3>
-              <p className="text-primary">{formatPrice(product.price)}</p>
-            </CardFooter>
+            <Link href={product.link}>
+              <CardContent className="p-0">
+                <AspectRatio ratio={4 / 3}>
+                  <Image
+                    src={product.images[0]}
+                    alt={product.title}
+                    fill
+                    className="object-contains"
+                  />
+                </AspectRatio>
+              </CardContent>
+              <CardFooter className="flex-col items-start gap-2 p-4">
+                <h3 className="font-semibold">{product.title}</h3>
+                <p className="text-primary">{formatPrice(product.price)}</p>
+              </CardFooter>
+            </Link>
           </Card>
         </Link>
       ))}
